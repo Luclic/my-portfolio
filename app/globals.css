@@ -25,3 +25,12 @@ body {
   background: var(--accent);
   color: white;
 }
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(100%) skewX(-12deg); }
+}
+.animate-\[shimmer_2s_infinite\] {
+  animation: shimmer 2s infinite linear;
+}
+

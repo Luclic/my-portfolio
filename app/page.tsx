@@ -37,7 +37,7 @@ export default function Home() {
                     d="M 40 100 A 60 60 0 0 1 160 100"
                     fill="none"
                     stroke="#3b82f6"
-                    strokeWidth="0.3"
+                    strokeWidth="0.7"
                     strokeLinecap="round"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 0.25 }}
@@ -47,7 +47,37 @@ export default function Home() {
               </div>
             </div>
 
-            {/* TOP SECTION: Cleaned (Top Left Removed) */}
+            {/* SECOND SMALLER HUD */}
+            <div className="absolute top-[40%] right-[-20%] flex items-center justify-center opacity-20">
+              <motion.svg 
+                animate={{ rotate: -360 }}
+                transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                viewBox="0 0 200 200"
+                className="w-[500px] h-[500px]"
+              >
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="98"
+                  stroke="white"
+                  strokeWidth="0.3"
+                  fill="none"
+                  strokeDasharray="1 10"
+                />
+                <motion.path
+                  d="M 40 100 A 60 60 0 0 1 160 100"
+                  fill="none"
+                  stroke="#ec2424"
+                  strokeWidth="0.3"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 0.25 }}
+                  transition={{ duration: 3, ease: "easeInOut" }}
+                />
+              </motion.svg>
+            </div>
+
+            {/* TOP SECTION */}
             <header className="relative z-10 flex justify-end items-start">
               <div className="text-right font-mono text-[7px] opacity-30 leading-relaxed uppercase">
                 [KERNEL_LOG_INIT] <br/>
@@ -57,16 +87,26 @@ export default function Home() {
               </div>
             </header>
 
-            {/* MIDDLE SECTION: Title & Lowered Button */}
-            <div className="relative z-10 self-center flex flex-col items-center">
-              <div className="flex items-center gap-6 mb-4">
-                 <div className="w-12 h-[0.5px] bg-blue-500/50" />
-                 <h1 className="text-7xl font-black tracking-[-0.05em] text-white italic uppercase flex items-center">
-                   PROJECTS<span className="text-blue-600 mx-3">_</span>ARCHIVE<span className="text-blue-600 block w-2 h-10 bg-blue-600 ml-4 animate-pulse" />
-                 </h1>
-                 <div className="w-12 h-[0.5px] bg-blue-500/50" />
+            {/* MIDDLE SECTION */}
+            <div className="relative z-10 flex flex-col items-center">
+
+              {/* Title + Subtitle */}
+              <div className="flex flex-col items-center gap-4 mb-16">
+                <div className="flex items-center gap-6">
+                  <div className="w-12 h-[0.5px] bg-blue-500/50" />
+                  <h1 className="text-7xl font-black tracking-[-0.05em] text-white italic uppercase flex items-center">
+                    PROJECTS
+                    <span className="text-blue-600 mx-3">_</span>
+                    ARCHIVE
+                    <span className="text-blue-600 block w-2 h-10 bg-blue-600 ml-4 animate-pulse" />
+                  </h1>
+                  <div className="w-12 h-[0.5px] bg-blue-500/50" />
+                </div>
+
+                <p className="text-[9px] uppercase tracking-[1em] opacity-20 italic">
+                  Electronical & Computer Engineering
+                </p>
               </div>
-              <p className="text-[9px] uppercase tracking-[1em] opacity-20 mb-32 italic">Electronical & Computer Engineering</p>
 
               <motion.button
                 whileHover={{ scale: 1.05, backgroundColor: "#fff", color: "#000" }}
@@ -77,6 +117,7 @@ export default function Home() {
                 <span className="relative z-10">Access Repository</span>
                 <div className="absolute top-0 left-0 w-full h-full bg-blue-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 -z-0" />
               </motion.button>
+
             </div>
 
             {/* BOTTOM SECTION */}
