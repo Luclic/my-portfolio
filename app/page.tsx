@@ -1,7 +1,159 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { projects } from "@/data/project";
+
+
+const LogoSocials = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const containerVariants: Variants = {
+    initial: { 
+      width: 200,      
+      height: 64,     
+      backgroundColor: "#121212", 
+      borderRadius: "16px",
+      boxShadow: "0 0 0 1px rgba(255,255,255,0.05)" 
+    },
+    hover: { 
+      width: 240, 
+      height: 220,    
+      backgroundColor: "#1a1a1a", 
+      borderRadius: "20px",
+      boxShadow: "0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1)",
+      transition: { type: "spring", stiffness: 200, damping: 25 } 
+    }
+  };
+
+  const socialLinks = [
+    { name: "LinkedIn", url: "#", color: "#3b82f6" },
+    { name: "GitHub", url: "#", color: "#ffffff" },
+    { name: "Instagram", url: "#", color: "#ef4444" }
+  ];
+
+  return (
+    <motion.div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      variants={containerVariants}
+      initial="initial"
+      animate={isHovered ? "hover" : "initial"}
+      className="absolute top-12 left-12 z-50 overflow-hidden cursor-pointer flex flex-col"
+    >
+      {/* HEADER */}
+      <div className="flex items-center px-4 h-[64px] shrink-0">
+        <motion.div 
+          animate={{ scale: isHovered ? 0.85 : 1 }} 
+          className="relative flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden border border-white/10 shadow-lg"
+        >
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = "https://ui-avatars.com/api/?name=G&background=3b82f6&color=fff";
+            }}
+          />
+        </motion.div>
+        
+        <div className="ml-4 flex flex-col">
+          <span className="text-[11px] font-black text-white tracking-[0.2em] uppercase">Gemini</span>
+          
+          <div className="flex items-center gap-2">
+            {/* --- BLINKING STATUS INDICATOR --- */}
+            <div className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            </div>
+            
+            <motion.span 
+              animate={{ opacity: isHovered ? 1 : 0.4 }}
+              className="text-[7px] text-blue-500 font-mono tracking-[0.1em]"
+            >
+              VER_3.0_STABLE
+            </motion.span>
+          </div>
+        </div>
+      </div>
+
+      {/* BODY */}
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="px-6 py-4 border-t border-white/5 space-y-4"
+          >
+            <p className="text-[8px] text-white/30 uppercase tracking-[0.3em] mb-2 font-bold">Connect_Interface</p>
+            
+            {socialLinks.map((link, i) => (
+              <motion.a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                initial={{ x: -10, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ x: 8 }}
+                className="flex items-center group text-[10px] font-medium text-white/50 hover:text-white transition-all"
+              >
+                <div className="w-1 h-1 rounded-full bg-white/10 group-hover:bg-blue-500 mr-3 transition-colors" />
+                <span className="tracking-widest uppercase">{link.name}</span>
+                <span className="ml-auto opacity-0 group-hover:opacity-100 text-blue-500 transition-opacity duration-300">→</span>
+              </motion.a>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+
+const CoordinateLine = ({ text, hoverColor = "#3b82f6" }: { text: string, hoverColor?: string }) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 10, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { type: "spring" as const, stiffness: 300 } 
+    },
+  };
+
+  return (
+    <motion.div
+      className="flex justify-end"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          variants={itemVariants}
+          whileHover={{ 
+            scale: 1.5, 
+            color: hoverColor, // Dynamically set color
+            margin: "0 2px" 
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          className="inline-block cursor-default font-black text-[14px] text-white tracking-[0.2em]"
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
+};
 
 export default function Home() {
   const [view, setView] = useState<"home" | "repo">("home");
@@ -22,6 +174,8 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="h-full w-full relative flex flex-col justify-between p-12"
           >
+            <LogoSocials />
+
             {/* BACKGROUND HUD */}
             <div className="absolute inset-0 pointer-events-none z-0">
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:100px_100px]" />
@@ -109,13 +263,38 @@ export default function Home() {
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "#fff", color: "#000" }}
-                whileTap={{ scale: 0.95 }}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setView("repo")}
-                className="mt-40 px-24 py-4 border border-white/10 bg-white/5 backdrop-blur-xl rounded-none text-[9px] uppercase tracking-[0.8em] transition-all duration-500 font-bold group overflow-hidden"
+                className="mt-40 px-20 py-4 border border-white/10 bg-white/5 backdrop-blur-xl rounded-none text-[9px] uppercase tracking-[0.8em] font-bold group relative overflow-hidden"
               >
-                <span className="relative z-10">Access Repository</span>
-                <div className="absolute top-0 left-0 w-full h-full bg-blue-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 -z-0" />
+                {/* The Animated Text */}
+                <motion.span className="relative z-10 flex justify-center">
+                  {"Access Repository".split("").map((char, i) => (
+                    <motion.span
+                      key={i}
+                      variants={{
+                        hidden: { opacity: 0, y: 10 },
+                        visible: { opacity: 1, y: 0, transition: { delay: i * 0.03 } },
+                        hover: { color: "#000000", scale: 1.1, transition: { duration: 0.2 } }
+                      }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </motion.span>
+                  ))}
+                </motion.span>
+
+                {/* HUD-style scanning line effect on hover */}
+                <motion.div 
+                  variants={{
+                    hover: { top: ["100%", "-100%"], transition: { repeat: Infinity, duration: 1.5, ease: "linear" } }
+                  }}
+                  className="absolute left-0 w-full h-[1px] bg-blue-500/30 z-0" 
+                />
+                
+                <div className="absolute top-0 left-0 w-full h-full bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </motion.button>
 
             </div>
@@ -130,21 +309,22 @@ export default function Home() {
                   <span className="text-blue-500">↻</span> REBOOT_SYSTEM
                 </button>
                 <div className="flex gap-2">
-                   {[1,2,3].map(i => <div key={i} className="w-4 h-1 bg-white/5 rounded-full" />)}
+                  {[1,2,3].map(i => <div key={i} className="w-4 h-1 bg-white/5 rounded-full" />)}
                 </div>
               </div>
 
+              {/* FIXED SECTION: Removed h-screen and bg-black */}
               <div className="text-right">
-                <div className="flex flex-col items-end group cursor-default">
-                  <span className="text-[14px] font-black text-white tracking-[0.4em] group-hover:text-blue-500 transition-colors">40.6401° N</span>
-                  <span className="text-[14px] font-black text-white tracking-[0.4em] group-hover:text-blue-500 transition-colors">22.9444° E</span>
+                <div className="flex flex-col items-end">
+                  <CoordinateLine text="40.6401° N" hoverColor="#3b82f6" /> {/* Blue */}
+                  <CoordinateLine text="22.9444° E" hoverColor="#ef4444" /> {/* Red (Tailwind red-500) */}
                 </div>
                 <div className="h-[2px] w-40 bg-white/10 mt-4 relative overflow-hidden">
-                   <motion.div 
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-0 left-0 w-1/2 h-full bg-blue-500/50" 
-                   />
+                    <motion.div 
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      className="absolute top-0 left-0 w-1/2 h-full bg-blue-500/50" 
+                    />
                 </div>
               </div>
             </footer>
